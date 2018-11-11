@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>DCS - 2.2</title>
+
+    <!--- Math.js library, for matrix manipulation, and many other things--->
+    <script src="../math.min.js"></script>
+</head>
+
+<body>
+
+<h1>DCS - 2.2 Properties of conics</h1>
+<canvas id="canvas1" height="600" width="600" class="bezier"  style="border:1px solid #d3d3d3;"></canvas>
+<div style="padding-left: 20px; width:800px">
+    <h2>Explanation</h2>
+    <p> To explain a reflection property of a parabola I will consider the parabola
+        This is a general case and I will use it to make the explanations easier.
+    </p>
+    <p>
+        Let's take function f(x) = ax<sup>2</sup>.
+        Imagine a parallel ray reflecting in the parabola. Let's name the intersection point as P=(x<sub>o</sub>, y<sub>o</sub>).
+        <br>Let's construct a line tangent to the parabola in point P. It has a formula of:
+        y: a<sub>t</sub>x + b<sub>t</sub>
+        <br>a<sub>t</sub> is equal to the value of f'(x<sub>0</sub>)
+        <br> f'(x<sub>0</sub>) = 2 * a * x<sub>0</sub>
+
+        As we know from physics lesson The law of reflection states that angle of incidence equals the angle of reflection.
+        Let's look at this general case drawing. <br>
+        <img style="width: 300px" src="assignment2_2_pic.png">
+        <br>Let's find a formula for the reflection line (the one going through G and B).
+        <br>y<sub>f</sub> = a<sub>f</sub>x + b<sub>f</sub>
+        <br>y<sub>f</sub> = tg(β)x  + b<sub>f</sub> .
+        <br> Firstly notice that: γ + γ + 90° - β = 180°
+        <br> That is: β = 2γ - 90°
+        <br> Also: γ = α because γ + 90° == α + 90°
+        <br> tg(β) = tg(2γ - 90°) = (some calculations) = - 1 / tg(2α)
+        <br><img style="max-width: 150px" src="tg2alfa.png">
+        <br> tg(β) = tg<sup>2</sup>(α) - 1 / (2 * tg(α))
+        <br> tg(α) is easy to compute. It equals to f'(x<sub>0</sub>) = 2ax<sub>0</sub>
+        <br>
+        <br> tg(β) = (4a<sup>2</sup>x<sub>0</sub><sup>2</sup> - 1) / (4ax<sub>0</sub>)
+        <br><br>
+        For the computation of y<sub>f</sub> we still lack b<sub>f</sub>. <br>
+        we know that the B point lays on the intersection of parabola and the y<sub>b</sub><br>
+
+        (4a<sup>2</sup>x<sub>0</sub><sup>2</sup> - 1) / (4ax<sub>0</sub>) * x<sub>0</sub>  + b<sub>f</sub> = a x<sub>0</sub><sup>2</sup>
+        <br>
+        (some calculations)<br>
+        b<sub>f</sub> =  - 1 / (4a)<br>
+
+        y(0) = a<sub>f</sub> * 0 + b<sub>f</sub> = b<sub>f</sub> = -0.25a
+        <br><br> It is clearly visible that no matter what value of x<sub>0</sub> we choose
+        (in other words: no matter where the ray is gonna "hit" the parabola) the reflection line will <b>always</b>
+        go through point (0, -0.25/a).
+        This proves the focal property of parabola
+    </p>
+    <p>
+        Although I have explained how it works only in a general case, one can imagine easily that
+        we can obtain any parabola by translating this function by a vector (as we know we can write a formula for any
+        parabola by translating a function f(x) = ax<sup>2</sup> within a vector (v<sub>x</sub>, v<sub>y</sub>).
+        Thus, it means that the focal property stays the same, just the focus point will be moved by this vector as well.
+    </p>
+    <p>
+        In this example the parabole equation is y = x<sup>2</sup>/200. <br>
+        "a" coeffficient equals to 1/200, so the focus point is:<br>
+        [0, -1/(4 * 1/200)] = [0, 50]
+    </p>
+</div>
+
+
+<script type="text/javascript" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+ <html> 
+      <head> 
+      <title>DCS - 2.1</title> 
+
+      </head>
+
+      <body>
+
+      <h1>DCS - 2.1 Elliptic helix in 3D</h1>
+      <div style="width: 100%; display: flex">
+          <div style="width:400px;">
+              <h3> Circular helix </h3>
+              x = a * cos(t) <br>
+              y = a * sin(t) <br>
+              z = b * t <br>
+              <input id="circularHelixAValue" placeholder="a value">
+              <input id="circularHelixBValue" placeholder="b value">
+              <input id="circularHelixTValueFrom" placeholder="t value from">
+              <input id="circularHelixTValueTo" placeholder="t value to">
+              <input id="circularHelixTIterations" placeholder="number of iterations">
+              <button type="button" onclick="buildCircularHelix()">Draw</button>
+          </div>
+
+          <div style="width: 500px;">
+              <h3> Elliptical helix </h3>
+              x = a1 * cos(t) <br>
+              y = a2 * sin(t) <br>
+              z = b * t <br>
+              <input id="EllipticalHelixA1Value" placeholder="a1 value">
+              <input id="EllipticalHelixA2Value" placeholder="a2 value">
+              <input id="EllipticalHelixBValue" placeholder="b value">
+              <input id="EllipticalHelixTValueFrom" placeholder="t value from">
+              <input id="EllipticalHelixTValueTo" placeholder="t value to">
+              <input id="EllipticalHelixTIterations" placeholder="number of iterations">
+              <button type="button" onclick="buildEllipticalHelix()">Draw</button>
+          </div>
+      </div>
+
+      <script src="../math.min.js"></script>
+      <script src="../three.min.js"></script>
+      <script src="../OrbitControls.js"></script>
+
+
+     <script type="text/javascript" src="main.js"></script>
+      </body>
+
+      </html>
