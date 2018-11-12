@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>DCS - 3.3</title>
+
+    <!--- Math.js library, for matrix manipulation, and many other things--->
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
+</head>
+
+<body>
+
+<h1>DCS - 3.3 Cubic Hermite interpolation</h1>
+
+<input id="point0x" placeholder="P0 x">
+<input id="point0y" placeholder="P0 y"><br>
+<input id="point1x" placeholder="P1 x">
+<input id="point1y" placeholder="P1 y"><br><br>
+
+<input id="tangentAtPoint0x" placeholder="tangent at P0 x">
+<input id="tangentAtPoint0y" placeholder="tangent at P0 y"><br>
+<input id="tangentAtPoint1x" placeholder="tangent at P1 x">
+<input id="tangentAtPoint1y" placeholder="tangent at P1 y"> <br>
+
+Mark value for t=0.5 on the canvas
+<input id="markValueForHalfwayT" type="checkbox"  /> <br>
+
+
+<button type="button" onclick="drawCanvas()">Interpolate</button>
+
+<canvas id="canvas1" height="600" width="800" class="bezier"  style="border:1px solid #d3d3d3;"></canvas>
+
+<script type="text/javascript" src="../interpolations.js"></script>
+<script type="text/javascript" src="main.js"></script>
+</body>
+</html>

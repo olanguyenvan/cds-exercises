@@ -25,12 +25,11 @@ function interpolatePoint(t, controlPoints, tValues){
 
 function computeInterpolationCurve(numberOfPointsToCompute, controlPoints, tValues) {
     let computedPoints = [];
-    for (let i = 1; i <= numberOfPointsToCompute; i+=1) {
+    for (let i = 0; i <= numberOfPointsToCompute; i+=1) {
         let t = i / numberOfPointsToCompute;
         computedPoints.push(interpolatePoint(t, controlPoints, tValues))
     }
     return computedPoints
-
 }
 
 
@@ -59,4 +58,29 @@ function computeInterpolationCurveWithTValuesProportionalToDistance(numberOfPoin
         tValuesProportionallytoTheDistance[i] = sumOfDistancesSoFar/sumOfDistances
     }
     return computeInterpolationCurve(numberOfPointsToCompute, points, tValuesProportionallytoTheDistance)
+}
+
+
+function cubicHermiteInterpolationPoint(t, point0, point1, tangent0, tangent1){
+    let t2 = t * t;
+    let t3 = t2 * t;
+    let a = 2 * t3 - 3 * t2 + 1;
+    let b = t3 - 2 * t2 + t;
+    let c = -2 * t3 + 3 * t2;
+    let d = t3 - t2;
+    return {
+        x: a * point0.x  + b * tangent0.x + c * point1.x + d * tangent1.x,
+        y: a * point0.y  + b * tangent0.y + c * point1.y + d * tangent1.y
+    }
+}
+
+function computeCubicHermiteInterpolationCurveFor2Points(numberOfPointsToCompute, point0, point1, tangent0, tangent1){
+    let computedPoints = [];
+
+    // t from 0 to 1
+    for (let i = 0; i <= numberOfPointsToCompute; i+=1) {
+        let t = i / numberOfPointsToCompute;
+        computedPoints.push(cubicHermiteInterpolationPoint(t, point0, point1, tangent0, tangent1))
+    }
+    return computedPoints
 }
