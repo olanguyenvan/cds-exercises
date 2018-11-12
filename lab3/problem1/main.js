@@ -6,7 +6,7 @@
 */
 
 var canvas1, context1, points, myTransformation, style, styleForUniformCurve, styleForDistanceProportionalCurve, drag = null, draggedPoint;
-let numberOfComputedPoints = 100;
+let numberOfPointsToCompute = 100;
 points = [{ x:100, y:100 },{ x:200, y:300 },{ x:350, y:200 }, { x:600, y:350 }];
 
 function init() {
@@ -45,7 +45,6 @@ function init() {
  Basic drawing methods
  **/
 
-
 // draw canvas
 function drawCanvas() {
     // Clear everything
@@ -57,33 +56,24 @@ function drawCanvas() {
     // Curve through points and vertices
     drawVertices(context1, style, points); // Draw vertices as circles
 
-
-    // uniForm t Values
-    let numberOfControlPoints = points.length;
-    let tInterval = 1 / (numberOfControlPoints- 1);
-    let tValuesUniform = [...Array(numberOfControlPoints).keys()].map(x => x * tInterval);
-    drawInterpolationCurve(context1, styleForUniformCurve, points, tValuesUniform)
-
-    // t Values proportional to the distance between points
-    function distanceBetweenPoints(point1, point2){
-        return Math.sqrt(point1.x * point2.x + point1.y * point2.y)
-    }
-    let tValuesProportionallytoTheDistance = [0];
-    for (let i = 1; i < numberOfControlPoints; i++){
-        tValuesProportionallytoTheDistance.push(distanceBetweenPoints(points[i-1], points[i]))
-    }
-
-    let sumOfDistances = tValuesProportionallytoTheDistance.reduce((a, b) => a +b);
-    let sumOfDistancesSoFar = 0;
-
-    for(let i = 1; i < numberOfControlPoints; i++){
-        sumOfDistancesSoFar += tValuesProportionallytoTheDistance[i];
-        tValuesProportionallytoTheDistance[i] = sumOfDistancesSoFar/sumOfDistances
-    }
-    drawInterpolationCurve(context1, styleForDistanceProportionalCurve, points, tValuesProportionallytoTheDistance)
-
+    drawCurveConnectingPoints(context1, styleForUniformCurve, computeInterpolationCurveWithUniformTValues(numberOfPointsToCompute, points));
+    drawCurveConnectingPoints(context1, styleForDistanceProportionalCurve, computeInterpolationCurveWithTValuesProportionalToDistance(numberOfPointsToCompute, points));
 }
 
+function drawCurveConnectingPoints(ctx, style, points){
+    ctx.lineWidth = style.curve.width;
+    ctx.strokeStyle = style.curve.color;
+    ctx.beginPath();
+    let firstPoint = points[0];
+    let currentPoint;
+    ctx.moveTo(firstPoint.x, firstPoint.y);
+    for (let i = 0; i < points.length; i+=1) {
+        currentPoint = points[i];
+        ctx.lineTo(currentPoint.x, currentPoint.y);
+        ctx.moveTo(currentPoint.x, currentPoint.y);
+    }
+    ctx.stroke();
+}
 
 // Draw a background grid
 function drawGrid(myContext,bw,bh){
@@ -106,51 +96,6 @@ function drawGrid(myContext,bw,bh){
     myContext.strokeStyle = "black";
     myContext.font = "12px Arial";
     myContext.fillText("(0,0)",2,12);
-
-}
-
-
-
-function interpolatePoint(t, controlPoints, tValues){
-    let numberOfControlPoints = controlPoints.length;
-
-    let s = {x: 0, y: 0};
-    for( let i=0; i < numberOfControlPoints; i++){
-        let controlPoint = controlPoints[i];
-        let enumerator = 1;
-        let denominator = 1;
-
-        for( let j=0; j < numberOfControlPoints; j++) {
-            if (j !== i){
-                enumerator *= t - tValues[j];
-                denominator *= tValues[i] - tValues[j];
-            }
-        }
-        let fraction = enumerator/denominator;
-        s.x += fraction * controlPoint.x;
-        s.y += fraction * controlPoint.y;
-        // console.log(s)
-    }
-    return s
-}
-
-
-function drawInterpolationCurve(ctx, style, controlPoints, tValues) {
-
-    ctx.lineWidth = style.curve.width;
-    ctx.strokeStyle = style.curve.color;
-    ctx.beginPath();
-    var firstPoint = points[0];
-    var currentPoint;
-    ctx.moveTo(firstPoint.x, firstPoint.y);
-
-    for (let i = 1; i <= numberOfComputedPoints; i+=1) {
-        let t = i/numberOfComputedPoints;
-        currentPoint = interpolatePoint(t, controlPoints, tValues);
-        ctx.lineTo(currentPoint.x, currentPoint.y);
-        ctx.moveTo(currentPoint.x, currentPoint.y);
-    }
-    ctx.stroke();
 
 }
 
