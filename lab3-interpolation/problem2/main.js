@@ -67,8 +67,8 @@ function drawCanvas() {
 
     drawCurveConnectingPoints(context1, styleForRealCurve, realPoints);
     drawCurveConnectingPoints(context1, styleForInterpolatedCurve,
-        computeInterpolationCurveWithTValuesProportionalToDistance(numberOfPointsToCompute, controlPoints));
-        // computeInterpolationCurveWithUniformTValues(numberOfPointsToCompute, controlPoints));
+        // computeInterpolationCurveWithTValuesProportionalToDistance(numberOfPointsToCompute, controlPoints));
+        computeInterpolationCurveWithUniformTValues(numberOfPointsToCompute, controlPoints));
 }
 
 

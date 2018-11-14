@@ -30,7 +30,34 @@ Mark value for t=0.5 on the canvas
 <button type="button" onclick="drawCanvas()">Interpolate</button>
 
 <canvas id="canvas1" height="600" width="800" class="bezier"  style="border:1px solid #d3d3d3;"></canvas>
+<h3>Explanation for problem 4</h3>
+<p>P<sub>0</sub> = (200, 200) P<sub>1</sub> = (400, 300) v<sub>0</sub> = (100, 100)
+    v<sub>1</sub> = (100, 0)</p>
+<p>The computed value for t=1/2 is (300, 262,5)</p>
+<p>In order to get the value for t=1/2 (300, 300) the values for the tangent should be:<br>
+    v<sub>0</sub> = (400, 400) <br>
+    v<sub>1</sub> = (400, 0) <br>
+    These tangent have the same directions as the previous ones.
+</p>
+<p>
+    Calculations:<br>
+    p(t) = (2t<sup>3</sup> + 3t <sup>2</sup> + 1) * P<sub>0</sub> + (t<sup>3</sup> - 2t<sup>2</sup> + t) * v<sub>0</sub> +
+    (-2t<sup>3</sup> + 3t<sup>2</sup>) *  P<sub>1</sub> + (t<sup>3</sup> - t<sup>2</sup>) * v<sub>1</sub><br>
+    We introduce the m, n coefficients for v<sub>0</sub> and v<sub>1</sub> vectors<br>
+    p(1/2) = 1/2 * P<sub>0</sub> + 1/8 * <b>m</b>* v<sub>0</sub> + 1/2 *  P<sub>1</sub> - 1/8 * <b>n</b> * v<sub>1</sub><br>
+    We want to compute m, n.<br>
+    The values for x, and y coordinates should be as follows:<br>
+    1) p<sub>x</sub> = 300 = 300 + 100/8 * m - 100/8 * n<br>
+    2) p<sub>y</sub> = 300 = 250 + 100/8 * m - 0/8 * n<br>
+    From 1): <br>
+    n =  4<br>
+    We use it in 1) equation and get:<br>
+    0 = 12,5n - 50m   ==>     n = 4<br><br>
 
+    So the new tangent vectors are:
+    v<sub>0</sub>' = m * v<sub>0</sub> = 4 * (100, 100) = (400, 400)<br>
+    v<sub>1</sub>' = n * v<sub>1</sub> = 4 * (100, 0) = (400, 0)<br>
+</p>
 <script type="text/javascript" src="../interpolations.js"></script>
 <script type="text/javascript" src="main.js"></script>
 </body>
