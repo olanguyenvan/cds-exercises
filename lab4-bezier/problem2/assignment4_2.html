@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>DCS - 4.1</title>
+
+    <!--- Math.js library, for matrix manipulation, and many other things--->
+    <script src="../math.min.js"></script>
+    <script src="../utils.js"></script>
+    <script src="../bezier.js"></script>
+</head>
+
+<body>
+    <h1>DCS - 4.1. Cubic Bézier curve</h1>
+    <input id="newPointXValue" placeholder="new point x value">
+    <input id="newPointYValue" placeholder="new point y value">
+    <button type="button" onclick="addControlPoint()">Add control point</button>
+
+    <canvas id="canvas1" height="600" width="800" class="bezier"  style="border:1px solid #d3d3d3;"></canvas>
+<script src="main.js"></script>
+</body>
+</html>

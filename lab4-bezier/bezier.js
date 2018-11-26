@@ -12,16 +12,15 @@ function factorial(n) {
 function computeNewtonValues(n) {
     let newtonValues = new Array(n);
     for (let i = 0; i < n; i++){
-        newtonValues[i] = factorial(n) / (factorial(i) * factorial(n - i))
+        newtonValues[i] = factorial(n) / (factorial(i) * factorial(n - i));
         newtonValues[n - i] = factorial(n) / (factorial(i) * factorial(n - i))
     }
     return newtonValues
-
 }
 
 
-function bersteinPolynomial(n, i, t, computerNewtonValues){
-    return computerNewtonValues[i] * Math.pow(t, i) * Math.pow(1 - t, n - i)
+function bersteinPolynomial(n, i, t, computedNewtonValues){
+    return computedNewtonValues[i] * Math.pow(t, i) * Math.pow(1 - t, n - i)
 }
 
 
