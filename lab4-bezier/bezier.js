@@ -9,33 +9,37 @@ function factorial(n) {
 }
 
 
-function newton(n, i) {
-    return factorial(n) / (factorial(i) * factorial(n - i))
+function computeNewtonValues(n) {
+    let newtonValues = new Array(n);
+    for (let i = 0; i < n; i++){
+        newtonValues[i] = factorial(n) / (factorial(i) * factorial(n - i))
+        newtonValues[n - i] = factorial(n) / (factorial(i) * factorial(n - i))
+    }
+    return newtonValues
+
 }
 
 
-function bersteinPolynomial(n, i, t){
-    let a,b,c;
-    return newton(n, i) * Math.pow(t, i) * Math.pow(1 - t, n - i)
+function bersteinPolynomial(n, i, t, computerNewtonValues){
+    return computerNewtonValues[i] * Math.pow(t, i) * Math.pow(1 - t, n - i)
 }
 
 
 
 function computeBezierCurve(numberOfPointsToCompute, controlPoints){
     let numberOfControlPoints = controlPoints.length;
+    let newtonValues = computeNewtonValues(numberOfControlPoints - 1);
     let computedPoints = [];
     for (let i = 0; i <= numberOfPointsToCompute; i+=1) {
         let t = i / numberOfPointsToCompute;
         let computedPoint = {'x': 0, 'y': 0};
         for (let j = 0; j < numberOfControlPoints; j++){
-            let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPoints - 1, j, t);
+            let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPoints - 1, j, t, newtonValues);
             computedPoint.x += bernsteinPolynomialValue * controlPoints[j].x;
             computedPoint.y += bernsteinPolynomialValue * controlPoints[j].y;
-            console.log(bernsteinPolynomialValue);
 
         }
         computedPoints.push(computedPoint)
     }
-    console.log(controlPoints);
     return computedPoints
 }
