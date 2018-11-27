@@ -11,7 +11,7 @@ function init() {
     style = {
         curve:	{ width: 3, color: "#E6B3B3" },
         line:	{ width: 1, color: "#C00" },
-        point: { radius: 10, width: 2, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
+        point: { radius: 5, width: 2, color: "#900", fill: "rgba(200,200,200,0.5)", arc1: 0, arc2: 2 * Math.PI }
     };
 
     styleForBezierCurve = {
@@ -213,6 +213,9 @@ function addControlPoint(){
 
 function deleteControlPoint(curveIndex, pointIndex){
     curvesDefinitions[curveIndex].splice(pointIndex, 1);
+    if (curvesDefinitions[curveIndex].length === 0) {
+        curvesDefinitions.splice(curveIndex, 1);
+    }
     drawCanvas();
     showPointsInformation();
 }
@@ -253,6 +256,7 @@ function readSingleFile(e) {
 function updateContents(contents) {
     curvesDefinitions= JSON.parse(contents);
     drawCanvas();
+    showPointsInformation();
 }
 
 document.getElementById('file-input')
