@@ -17,7 +17,6 @@ function init() {
         curve:	{ width: 3, color: "#6a65e6" },
     };
 
-
     // line style defaults
     context1.lineCap = "round";
     context1.lineJoin = "round";
@@ -30,10 +29,6 @@ function init() {
     drawCanvas();
 }
 
-
-/**
- Basic drawing methods
- **/
 
 
 // draw canvas

@@ -233,7 +233,6 @@ function saveToFile(text, name, type) {
 
 
 function doSave() {
-    //Save control points as JSON string to a file
     saveToFile(JSON.stringify(curvesDefinitions), 'control_points.txt', 'text/plain');
 }
 
@@ -252,9 +251,7 @@ function readSingleFile(e) {
 }
 
 function updateContents(contents) {
-    // Replace control points by object read from file
-    points = JSON.parse(contents);
-    // Redraw
+    curvesDefinitions= JSON.parse(contents);
     drawCanvas();
 }
 
