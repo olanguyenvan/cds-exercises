@@ -1,7 +1,8 @@
-var canvas1, context1, controlPoints, myTransformation, style, styleForBezierCurve, drag = null, draggedPoint;
+var canvas1, context1, curvesDefinitions, myTransformation, style, styleForBezierCurve, dragCurve = null, drag = null, draggedPoint;
 let numberOfPointsToCompute = 20;
 
-controlPoints = [{ x:100, y:300 }, { x:200, y:300 },{ x:300, y:300 },{ x:400, y:300 }];
+curvesDefinitions = [[{x:114,y:71},{x:258,y:55},{x:422,y:65},{x:530,y:143},{x:530,y:297},{x:400,y:342}]];
+let letter = 'V'; // Your letter goes here
 
 function init() {
 
@@ -28,13 +29,27 @@ function init() {
     canvas1.onmouseup = canvas1.onmouseout = dragEnd;
 
     drawCanvas();
+    showPointsInformation();
 }
 
 
-/**
- Basic drawing methods
- **/
 
+function showPointsInformation(){
+    var divWithPoints = document.getElementById("pointsInfo");
+    divWithPoints.innerHTML = "<h1>Curves and control points information</h1>";
+
+    for(let i = 0; i < curvesDefinitions.length; i++){
+        let controlPoints = curvesDefinitions[i];
+        divWithPoints.innerHTML += "Curve no " + (i + 1);
+        divWithPoints.innerHTML += "<ol>";
+        for (let j = 0; j < controlPoints.length; j++){
+            divWithPoints.innerHTML += '<li>' + j + ':   [' + controlPoints[j].x + ',' + controlPoints[j].y + '] ' +
+                '<button type="button" onclick="deleteControlPoint(' + i + ',' +  j +')">delete Point</button>'
+                + '</li>';
+        }
+        divWithPoints.innerHTML += "</ol></br>";
+    }
+}
 
 // draw canvas
 function drawCanvas() {
@@ -44,12 +59,18 @@ function drawCanvas() {
     // Background grids
     drawGrid(context1,canvas1.width, canvas1.height); // Draw background grid
 
-    // Curve through controlPoints and vertices
-    drawCurve(context1, style, controlPoints); // Draw curve
-    drawVertices(context1, style, controlPoints); // Draw vertices as circles
-    drawCurveConnectingPoints(context1, styleForBezierCurve, computeBezierCurve(numberOfPointsToCompute, controlPoints));
+    // Background letter
+    context1.fillStyle = "lightgray";
+    context1.font = "800px Times";
+    context1.fillText(letter,100,600);
 
+    // Curve through control points and vertices
+    for(let i = 0; i < curvesDefinitions.length; i++){
+        drawCurve(context1, style, curvesDefinitions[i]); // Draw curve
+        drawVertices(context1, style, curvesDefinitions[i]); // Draw vertices as circles
+        drawCurveConnectingPoints(context1, styleForBezierCurve, computeBezierCurve(numberOfPointsToCompute, curvesDefinitions[i]));
 
+    }
 }
 
 
@@ -77,7 +98,7 @@ function drawGrid(myContext,bw,bh){
 
 }
 
-// Draws a polygonal curve connecting the controlPoints, after applying the given transformation
+// Draws a polygonal curve connecting the curvesDefinitions[i], after applying the given transformation
 function drawCurve(ctx, style, controlPoints, transformation) {
     // The transformation is optional. If none provided, use identity transform
     if (transformation===undefined) {
@@ -121,24 +142,29 @@ function drawVertices (ctx, style, controlPoints) {
 function dragStart(e) {
     e = mousePos(e);
     var dx, dy;
-    for (var i=0; i<controlPoints.length;i++) {
-        dx = controlPoints[i].x - e.x;
-        dy = controlPoints[i].y - e.y;
-        if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
-            drag = i;
-            draggedPoint = e;
-            canvas1.style.cursor = "move";
-            return;
+    for (var j=0; j< curvesDefinitions.length; j++){
+        let controlPoints = curvesDefinitions[j]
+        for (var i=0; i<controlPoints.length;i++) {
+            dx = controlPoints[i].x - e.x;
+            dy = controlPoints[i].y - e.y;
+            if ((dx * dx) + (dy * dy) < style.point.radius * style.point.radius) {
+                dragCurve = j;
+                drag = i;
+                draggedPoint = e;
+                canvas1.style.cursor = "move";
+                return;
+            }
         }
     }
+
 }
 
 // dragging
 function dragging(e) {
     if (drag!=null) {
         e = mousePos(e);
-        controlPoints[drag].x += e.x - draggedPoint.x;
-        controlPoints[drag].y += e.y - draggedPoint.y;
+        curvesDefinitions[dragCurve][drag].x += e.x - draggedPoint.x;
+        curvesDefinitions[dragCurve][drag].y += e.y - draggedPoint.y;
         draggedPoint = e;
         drawCanvas();
     }
@@ -147,8 +173,10 @@ function dragging(e) {
 // end dragging
 function dragEnd(e) {
     drag = null;
+    dragCurve = null;
     canvas1.style.cursor = "default";
     drawCanvas();
+    showPointsInformation();
 }
 
 // event parser
@@ -162,12 +190,31 @@ function mousePos(event) {
 
 
 function addControlPoint(){
+    let newPointXValue = parseFloat(document.getElementById('newPointXValue').value);
+    let newPointYValue = parseFloat(document.getElementById('newPointYValue').value);
+    let curveIndex = parseInt(document.getElementById('curveIndex').value) || 1;
+    let pointIndex = parseInt(document.getElementById('pointIndex').value) || 0;
+    if (curveIndex> curvesDefinitions.length){
+        curvesDefinitions.push([{x: newPointXValue, y: newPointYValue}]);
+    }
+    else {
+        if (pointIndex > curvesDefinitions[curveIndex - 1].length){
+            curvesDefinitions[curveIndex - 1].push({x: newPointXValue, y: newPointYValue});
+        }
+        else {
+            curvesDefinitions[curveIndex - 1].splice(pointIndex, 0, {x: newPointXValue, y: newPointYValue})
+        }
+    }
 
-    var newPointXValue = parseFloat(document.getElementById('newPointXValue').value);
-    var newPointYValue = parseFloat(document.getElementById('newPointYValue').value);
-    console.log("add")
-    controlPoints.push({x: newPointXValue, y: newPointYValue});
     drawCanvas();
+    showPointsInformation();
+}
+
+
+function deleteControlPoint(curveIndex, pointIndex){
+    curvesDefinitions[curveIndex].splice(pointIndex, 1);
+    drawCanvas();
+    showPointsInformation();
 }
 
 // Assign canvas and context variables
@@ -175,3 +222,41 @@ canvas1 = document.getElementById("canvas1");
 context1 = canvas1.getContext("2d");
 
 init();
+
+function saveToFile(text, name, type) {
+    var a = document.createElement("a");
+    var file = new Blob([text], {type: type});
+    a.href = URL.createObjectURL(file);
+    a.download = name;
+    a.click();
+}
+
+
+function doSave() {
+    //Save control points as JSON string to a file
+    saveToFile(JSON.stringify(curvesDefinitions), 'control_points.txt', 'text/plain');
+}
+
+function readSingleFile(e) {
+    var file = e.target.files[0];
+    if (!file) {
+        return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var contents = e.target.result;
+        updateContents(contents);
+    };
+    reader.readAsText(file);
+}
+
+function updateContents(contents) {
+    // Replace control points by object read from file
+    points = JSON.parse(contents);
+    // Redraw
+    drawCanvas();
+}
+
+document.getElementById('file-input')
+    .addEventListener('change', readSingleFile, false);
