@@ -1,40 +1,36 @@
-let storedFactorials = [];
 
-function factorial(n) {
-    if (n === 0 || n === 1)
-        return 1;
-    if (storedFactorials[n] > 0)
-        return storedFactorials[n];
-    return storedFactorials[n] = factorial(n-1) * n;
-}
+function computeNewtonValuesByPascalTriangle(n) {
+    let newtonValues = {};
+    for(let i=0; i <=n; i++){
+        newtonValues[i] = {0: 1};
+        newtonValues[i][i] = 1
+    }
 
-
-function computeNewtonValues(n) {
-    let newtonValues = new Array(n);
-    for (let i = 0; i < n; i++){
-        newtonValues[i] = factorial(n) / (factorial(i) * factorial(n - i));
-        newtonValues[n - i] = factorial(n) / (factorial(i) * factorial(n - i))
+    for(let i=2; i <=n; i++){
+        for(let j=1; j <= parseInt(i / 2); j++){
+            newtonValues[i][j] = newtonValues[i-1][j - 1] + newtonValues[i-1][j];
+            newtonValues[i][i -j] = newtonValues[i-1][j - 1] + newtonValues[i-1][j]
+        }
     }
     return newtonValues
 }
 
 
-function bersteinPolynomial(n, i, t, computedNewtonValues){
-    return computedNewtonValues[i] * Math.pow(t, i) * Math.pow(1 - t, n - i)
+function bersteinPolynomial(n, i, t, computedNewtonValuesByPascalTriangle){
+    return computedNewtonValuesByPascalTriangle[n][i] * Math.pow(t, i) * Math.pow(1 - t, n - i)
 }
-
 
 
 function computeBezierCurve(numberOfPointsToCompute, controlPoints){
     let numberOfControlPoints = controlPoints.length;
-    let newtonValues = computeNewtonValues(numberOfControlPoints - 1);
+    let newtonValuesByPascalTriangle = computeNewtonValuesByPascalTriangle(4);
     let computedPoints = [];
 
     for (let i = 0; i <= numberOfPointsToCompute; i+=1) {
         let t = i / numberOfPointsToCompute;
         let computedPoint = {'x': 0, 'y': 0};
         for (let j = 0; j < numberOfControlPoints; j++){
-            let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPoints - 1, j, t, newtonValues);
+            let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPoints - 1, j, t, newtonValuesByPascalTriangle);
             computedPoint.x += bernsteinPolynomialValue * controlPoints[j].x;
             computedPoint.y += bernsteinPolynomialValue * controlPoints[j].y;
 
@@ -85,6 +81,7 @@ function computeComposedBezierCurve(numberOfPointsToCompute, controlPoints){
     let chunksNumber = controlPointsChunks.length;
     let computedPoints = [];
     let numberOfPointsToComputePerChunk = parseInt(numberOfPointsToCompute/chunksNumber, 10);
+    let newtonValuesByPascalTriangle = computeNewtonValuesByPascalTriangle(4); // 4 because curves will be at most cubic
 
     for (let chunkIndex = 0; chunkIndex < chunksNumber; chunkIndex++) {
         for (let i = 0; i <= numberOfPointsToComputePerChunk; i+=1) {
@@ -92,10 +89,9 @@ function computeComposedBezierCurve(numberOfPointsToCompute, controlPoints){
             let computedPoint = {'x': 0, 'y': 0};
             let controlPoints = controlPointsChunks[chunkIndex];
             let numberOfControlPointsPerChunk = controlPoints.length;
-            let newtonValues = computeNewtonValues(numberOfControlPointsPerChunk - 1);
 
             for (let j = 0; j < numberOfControlPointsPerChunk; j += 1){
-                let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPointsPerChunk - 1, j, t, newtonValues);
+                let bernsteinPolynomialValue = bersteinPolynomial(numberOfControlPointsPerChunk - 1, j, t, newtonValuesByPascalTriangle);
                 computedPoint.x += bernsteinPolynomialValue * controlPoints[j].x;
                 computedPoint.y += bernsteinPolynomialValue * controlPoints[j].y;
             }
