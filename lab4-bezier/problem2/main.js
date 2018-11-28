@@ -1,8 +1,21 @@
 var canvas1, context1, curvesDefinitions, myTransformation, style, styleForBezierCurve, dragCurve = null, drag = null, draggedPoint;
-let numberOfPointsToCompute = 20;
+let numberOfPointsToCompute = 50;
 
-curvesDefinitions = [[{x:114,y:71},{x:258,y:55},{x:422,y:65},{x:530,y:143},{x:530,y:297},{x:400,y:342}]];
-let letter = 'V'; // Your letter goes here
+curvesDefinitions = [
+    [{x:114,y:71},{x:258,y:55},{x:422,y:65},{x:530,y:143},{x:530,y:297},{x:400,y:442},
+    {x: 356, y: 424}, {x: 306, y: 400}, {x: 200, y: 300}, {x: 200, y: 204}],
+    [
+        {x: 297, y: 269},
+        {x: 234, y: 155},
+        {x: 195, y: 77},
+        {x: 129, y: 166},
+        {x: 358, y: 143},
+        {x: 300, y: 267},
+    ]
+];
+
+// , {x: 476, y: 104}
+let letter = 'V';
 
 function init() {
 
@@ -68,7 +81,7 @@ function drawCanvas() {
     for(let i = 0; i < curvesDefinitions.length; i++){
         drawCurve(context1, style, curvesDefinitions[i]); // Draw curve
         drawVertices(context1, style, curvesDefinitions[i]); // Draw vertices as circles
-        drawCurveConnectingPoints(context1, styleForBezierCurve, computeBezierCurve(numberOfPointsToCompute, curvesDefinitions[i]));
+        drawCurveConnectingPoints(context1, styleForBezierCurve, computeComposedBezierCurve(numberOfPointsToCompute, curvesDefinitions[i]));
 
     }
 }
