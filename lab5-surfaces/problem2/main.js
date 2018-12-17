@@ -17,9 +17,9 @@ this.renderer.setSize(windowWidth, windowHeight);
 document.body.appendChild(renderer.domElement); // append it to the DOM
 
 // position and point the camera to the center of the scene (0,0,0)
-camera.position.x = 50;
+camera.position.x = 150;
 camera.position.y = 100;
-camera.position.z = 70;
+camera.position.z = 170;
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 // Create light, with same position and direction as camera
@@ -28,18 +28,6 @@ this.spotLight.position.copy(camera.position)
 this.spotLight.target.position.copy (camera.lookAt);
 scene.add(spotLight);
 
-
-hyperbolicParaboloidFunction = function(u, v) {
-    var a1 = {x: 60, y: 30, z: 0};
-    var a2 = {x: 10, y: 0, z: 0};
-    var b1 = {x: 60, y: 0, z: 60}; //
-    var b2 = {x: 10, y: 30, z: 60}; //
-
-    let equation = function(variable){
-        return (1 - v) * ( (1 - u) * a1[variable] + u * a2[variable]) + v * ( (1 - u) * b1[variable] + u * b2[variable])
-    };
-    return new THREE.Vector3(equation('x'), equation('y'), equation('z'));
-};
 
 // Function to create the actual mesh
 function createMesh(geom) {
@@ -58,7 +46,9 @@ var slides = functionExtent/3; //Number of evaluations on first variable
 var stacks = functionExtent/3; //Number of evaluations on second variable
 
 
-var parametricFunction = hyperbolicParaboloidFunction;
+let controlPoints = inputJSON.controlPoints;
+var parametricFunction = getBezierSurfaceEquation(controlPoints);
+
 //
 // Create parametric geometry based on parametric function
 var graphGeometry = new THREE.ParametricGeometry(parametricFunction, slides, stacks);
